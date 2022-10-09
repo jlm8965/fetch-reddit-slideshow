@@ -3,36 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Reddit Photo Slideshow</title>
-  <link rel="stylesheet" href="./css/style.css">
-  <script src="./js/index.js" defer></script>
+  <title>Best and Worst of Reddit</title>
+  <link rel="stylesheet" href="css/style.css" />
 </head>
-
 <body>
+  <h1>Welcome to the Best and Worst of Reddit</h1>
 
-  <div class="welcome">
-    <h1>Reddit Explorer</h1>
+  <!-- form -->
+  <form id="search-form">
+    <input type="text" id="search-input" placeholder="Search Reddit" />
+    <input type="submit" id="submit-button" />
+  </form>
+
+  <!-- stop button -->
+  <div>
+    <button id="stop-button">Stop Slideshow</button>
   </div>
 
-  <div class="description">
-    <p>Have a hankering for Reddit's best and worst? Look no further!</p><br></p>
-  </div>
+  <!-- slideshow container -->
+  <div id="slideshow-container"></div>
 
-  <div id ="container">
-    <div id="photobox">
-        <div id="search-and-start">
-            <div id="photo">
-  </div>
-
- 
-  <form role="search" id="form">
-    <input type="search" id="query" name="q"
-     placeholder="Search..."
-     aria-label="Search through site content">
-    <button><svg viewBox="0 0 1024 1024"><path class="path1" d="M848.471 928l-263.059-263.059c-48.941 36.706-110.118 55.059-177.412 55.059-171.294 0-312-140.706-312-312s140.706-312 312-312c171.294 0 312 140.706 312 312 0 67.294-24.471 128.471-55.059 177.412l263.059 263.059-79.529 79.529zM189.623 408.078c0 121.364 97.091 218.455 218.455 218.455s218.455-97.091 218.455-218.455c0-121.364-103.159-218.455-218.455-218.455-121.364 0-218.455 97.091-218.455 218.455z"></path></svg>
-    </button>
-      <button type="button" id="next">Next</button>
-      <button type="button" id="stop">Stop</button>
-    </form>
+  <script src="js/index.js"></script>
 </body>
 </html>

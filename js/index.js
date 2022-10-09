@@ -1,103 +1,74 @@
-//images array
-let currPhotoArr =  []
-const API_URL = 'https://www.reddit.com/search.json?limit=15&q='
-const INTERVAL_DELAY = 2000
-const currentIndex = 0
-const interval = 2000
+const TIMER_SPEED = 2000
+// variable for our interval
+let slideshowInterval = null
+// container for the images
+let images = []
+// index of the current image being shown
+let imageIndex = 0
 
-//forcing JS to wait to run its code until DOM has been loaded
-document.addEventListener('DOMContentLoaded', function(){
+///DOM SELECTORS
 
-//event listeners to buttons
-//search to search Reddit on click 
-document.getElementById(searchButton).addEventListener('submit', fetchFromReddit )
-//stop button to stop slides on click
-document.getElementById(stopButton).addEventListener('click', stopSlides)
-})
-//event listener to next button to move to next photo
-document.getElementById(nextButton).addEventListener('click', nextPhoto)
+const SEARCH_FORM = document.querySelector('#search-form')
+const SEARCH_INPUT = document.querySelector('#search-input')
+const SUBMIT_BUTTON = document.querySelector('#submit-button')
+const STOP_BUTTON = document.querySelector('#stop-button')
+const SLIDESHOW_CONTAINER = document.querySelector('#slideshow-container')
 
-//functions
-//function fetch photos from Reddit
-function fetchFromReddit(e) {
-  //asking to not refresh the page
+SEARCH_FORM.addEventListener('submit', fetchReddit)
+STOP_BUTTON.addEventListener('click', stopSlideshow)
+STOP_BUTTON.style.display = 'none'
+
+//FUNCTIONS
+
+function fetchReddit(e) {
   e.preventDefault()
-}
-
-//grabbing value from search box to search on Reddit
-const q = document.getElementById('query');
-if(query) {
-  fetch(API_URL + query)
-  .then(function(responseObj){
-    return responseObj.json()
-  })
-  .then(function(jsonResults){
-    const results = jsonResults.data.children
-  })
-}
-
-  //showImage
-const showImage = (image) => {
-    //getter method - getAttribute
-    const imageUrl = image.target.getAttribute('https://b.thumbs.redditmedia.com/1BCF9_RhHGW6ey65N4kIeeFZJDoINM7I0idajXV42lo.jpg')
-    fetch(imageUrl)
-    //have to return as JSON
-    .then(res => res.json())
-    .then(showImageSuccess)
-    .catch(console.error)
-
-
-//array of images to be looped through in slideshow
-const imagesArray = (image) => {
-    imagesArray.results.forEach(image => {
-        //creating div for each image
-        const imageSpace = document.createElement('div')
-        //naming image div
-        imageSpace.imageOneSpace = image.name
-        //add a class to each div
-        imageSpace.classList.add('imageClass')
-        //giving img tag an id
-        document.getElementById("imageid").src'https://b.thumbs.redditmedia.com/1BCF9_RhHGW6ey65N4kIeeFZJDoINM7I0idajXV42lo.jpg')
-        //setter-method
-        imageSpace.setAttribute(img src=URL('https://b.thumbs.redditmedia.com/1BCF9_RhHGW6ey65N4kIeeFZJDoINM7I0idajXV42lo.jpg'))
-        //click event
-        imageSpace.addEventListener('click', moveImageForward)
-        //take image and add to the container
-        container.appendChild(image)
+  // console.log(SEARCH_INPUT.value)
+  // fetch from reddit
+  fetch(`http://www.reddit.com/search.json?q=` + SEARCH_INPUT.value + '+nsfw:no')
+    .then(res => res.json()) // implicit return (with one param)
+    .then((jsonData) => {
+      console.log(jsonData.data.children)
+      images = jsonData.data.children
+        .map(child => {
+          return {
+            url: child.data.url,
+            subreddit: child.data.subreddit,
+            author: child.data.subreddit
+          }
+        })
+        .filter(image => {
+          const fileExtension = image.url.slice(-4)
+          if(fileExtension === '.jpg' || fileExtension === '.png') return true
+          return false
+    
+        })
+      // set the interval for the slideshow
+      slideshowInterval = setInterval(changeSlide, TIMER_SPEED)
+      STOP_BUTTON.style.display = 'inline'
+      // invoke the slideshow callback one time
+      changeSlide()
     })
+    .catch(err => console.log(err))
 }
 
-const photoAdvance = (currPhotoArr) => {
-    currPhotoIndex++
-    if(currPhotoIndex >= 20) {
-        currPhotoIndex = 0
-    }
+// callback function for the interval
+function changeSlide() {
+  // increment the slideshow index
+  imageIndex++
+  if(imageIndex >= images.length) imageIndex = 0
+  console.log(images[imageIndex])
+  // first empty out the div of any elements
+  while(SLIDESHOW_CONTAINER.firstChild) {
+    SLIDESHOW_CONTAINER.removeChild(SLIDESHOW_CONTAINER.firstChild)
+  }
+  // update the DOM
+  const imageSlide = document.createElement('img')
+  imageSlide.src = images[imageIndex].url
+  imageSlide.alt = images[imageIndex].author
+  imageSlide.width = '400'
+
+  SLIDESHOW_CONTAINER.appendChild(imageSlide)
 }
-
-
-const getCurrImage = document.querySelector('.photobox')
-console.log(getCurrImage)
-getCurrImage.removeChild()
-const reddit = document.createElement('img')
-reddit.classList.add('reddit')
-reddit.setAttribute('src', currPhotoArr[currPhotoIndex])
-reddit.setAttribute('alt', `this is an image of ${constname} from reddit`)
-reddit.appendChild(reddit)
-
-
-//images slideshow
-const currphotoArr = document.querySelectorAll("img");
-  let i = 0;
-    setInterval(function(){ 
-    if(i == 0) {
-      currphotoArr[i].className = "fade-in-image";
-    } else if(i == photoArray.length ) {
-      currphotoArr[i - 1].className = "fade-out-image";
-      currphotoArr[0].className = "fade-in-image";
-      i = 0;
-    } else {
-      currphotoArr[i - 1].className = "fade-out-image";
-      currphotoArr[i].className = "fade-in-image";
-    }
-    i++;
-  }, 2000);
+//stop that mf
+function stopSlideshow() {
+}
